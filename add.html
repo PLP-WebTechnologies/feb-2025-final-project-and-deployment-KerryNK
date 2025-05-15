@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add a Playlist 🎶</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h2>🎵 Add a Playlist</h2>
+
+  <form id="playlistForm" autocomplete="off">
+    <input type="text" placeholder="Playlist Title" id="title" required />
+    <input type="text" placeholder="Description" id="description" />
+    <input type="text" placeholder="Tags (comma-separated)" id="tags" />
+    <input type="url" placeholder="Playlist Link" id="link" required />
+    <button type="submit">🎧 Save Playlist</button>
+  </form>
+
+  <button class="toggle-btn" onclick="toggleDarkMode()">🌓 Toggle Theme</button>
+
+  <!-- Toast notification -->
+  <div id="toast" role="status" aria-live="polite">Playlist saved! 🎵</div>
+
+  <script>
+    // Toast notification function
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('playlistForm');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const tags = document.getElementById('tags').value.split(',').map(tag => tag.trim()).filter(Boolean);
+        const link = document.getElementById('link').value.trim();
+
+        const playlist = { title, description, tags, link };
+
+        let playlists = JSON.parse(localStorage.getItem('playlists')) || [];
+        playlists.push(playlist);
+        localStorage.setItem('playlists', JSON.stringify(playlists));
+
+        showToast("✅ Playlist saved successfully!");
+        form.reset();
+      });
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+
+  <script src="music.js"></script>
+</body>
+</html>
